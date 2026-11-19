@@ -39,6 +39,8 @@ const cfDecode = (h) => { const k = parseInt(h.slice(0, 2), 16); let s = ''; for
 const KEEP_ABSOLUTE = 'link[rel="canonical"], meta[property^="og:"], meta[name^="twitter:"], link[rel="alternate"][hreflang]';
 
 function clean(html) {
+  // Site-specific fixes first, so they also reach blocks that EXTERNALIZE moves into shared files.
+  for (const [a, b] of PATCHES) html = html.split(a).join(b);
   const $ = cheerio.load(html);
   // WordPress plumbing that has no meaning without WordPress
   $('link[rel="https://api.w.org/"], link[rel="EditURI"], link[rel="shortlink"], link[rel="alternate"][type="application/json"], link[rel="alternate"][type="application/json+oembed"], link[rel="alternate"][type="text/xml+oembed"], link[rel="pingback"]').remove();
@@ -144,12 +146,7 @@ for (const p of pages) {
       extCount++;
     }
   }
-  let full = $.html();
-  if (PATCHES.length) {
-    for (const [a, b] of PATCHES) full = full.split(a).join(b);
-    const $p = cheerio.load(full);
-    $.root().empty().append($p.root().children());
-  }
+  const full = $.html();
   collect(full);
   await w(`scripts/port-snapshot/${snapName(p)}.html`, full);
   $('a[href]').each((_, el) => { const c = (el.attribs.class || '').split(/\s+/); if (c.some((x) => ACTIVE_CLASSES.includes(x)) || el.attribs['aria-current']) activeHrefs.add(linkKey(el)); });
