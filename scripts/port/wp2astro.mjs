@@ -45,6 +45,8 @@ function clean(html) {
   $('meta[name="generator"]').remove();
   $('script#breeze-prefetch-js, script#breeze-prefetch-js-extra, script#wp-emoji-settings, style#wp-emoji-styles-inline-css').remove();
   $('script[src*="email-decode.min.js"]').remove();
+  // Cloudflare Web Analytics beacon: Cloudflare injects it at the edge on proxied zones, so a copy would load twice.
+  $('script[src*="static.cloudflareinsights.com/beacon"]').remove();
   $('script[type="module"]').each((_, el) => { if (/wp-emoji|emoji-settings/.test($(el).html() || '')) $(el).remove(); });
   // Cloudflare email obfuscation (re-applied by Cloudflare at the edge if the zone has it on)
   $('a[href^="/cdn-cgi/l/email-protection"]').each((_, el) => { const h = ($(el).attr('href') || '').split('#')[1]; if (h) $(el).attr('href', 'mailto:' + cfDecode(h)); });
