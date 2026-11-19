@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://owntrade.co.uk/sitemap.xml

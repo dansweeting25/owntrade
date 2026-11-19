@@ -1,0 +1,8 @@
+# Keep the workers.dev preview URLs out of search results.
+https://:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+https://:version.:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+
+/wp-content/*
+  Cache-Control: public, max-age=604800

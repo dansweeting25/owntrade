@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "owntrade",
+  // Handles the form endpoint only; every other request is served straight from the static assets.
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-11-06",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/wp-admin/*"]
+  },
+  "observability": { "enabled": true },
+  // Form submissions are stored here (schema in migrations/).
+  "d1_databases": [
+    { "binding": "DB", "database_name": "owntrade", "database_id": "2d5363d5-1b04-46d3-b3b0-56e9853a3807", "migrations_dir": "migrations" }
+  ],
+  "vars": {
+    "SITE_NAME": "Own Trade",
+    "FORM_FROM": "forms@owntrade.co.uk"
+    // FORM_TO (where enquiries are emailed) is set in the Cloudflare dashboard, not in git.
+  }
+}
